@@ -4,9 +4,9 @@ title: "Deep Learning & Generative AI Hub"
 description: "A comprehensive guide to neural network architectures, flow matching, and diffusion models."
 ---
 
-# Deep Learning & Generative AI Hub
+# A Generative AI.
 
-Welcome to the central repository for advanced generative modeling concepts. This page acts as a structured guide covering tensor operations, classifier-free guidance, and flow matching mechanics.
+Welcome to the central repository for advanced generative modeling concepts. I will try to explain the working of VAE the way I understand. Your suggestions are always welcome.
 
 ---
 
