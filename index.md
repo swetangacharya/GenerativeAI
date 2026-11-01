@@ -48,10 +48,13 @@ VAE(
 **Loss Function**  
   - we are going to use BinaryCrossEntropy(BCE) loss, where every pixel of original and reconstructed image will be compared and if there is a huge difference between in one to one comparison then penalty is huge.
   - In a VAE, the total loss function (called the ELBO) is a balance between two parts:
-    1. Reconstruction Loss: How accurate the image is.
-    2. KL Divergence Loss: How well the latent space fits a standard normal distribution.
+    1. Reconstruction Loss: How accurate the image is. **reconstruction_loss = F.binary_cross_entropy(recon_x,x, reduction="sum")**
+    2. KL Divergence Loss: How well the latent space fits a standard normal distribution. **kl_loss = -0.5 * torch.sum( 1 + logvar - mu.pow(2) - logvar.exp())**
+
 
   - The mathematical derivation of the VAE optimization objective naturally dictates that both losses should be computed as a total sum over the dimensions. If you were to     use reduction="mean", the reconstruction loss would get divided by the number of pixels (784) and the batch size, making it artificially tiny compared to the KL       divergence loss. This imbalance would cause the model to ignore image quality entirely.
+
+
 ### PyTorch Flattening Example
 The following code snippet demonstrates how to flatten all dimensions of a tensor except for the batch size:
 
