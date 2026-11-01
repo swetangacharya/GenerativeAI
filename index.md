@@ -11,7 +11,7 @@ Welcome to the central repository for advanced generative modeling concepts. I w
 ---
 
 ## 📑 Table of Contents
-* [1. Understanding model in Pytorch](#1-Understanding Pytorch Model)
+* [1. Understanding Pytorch Model](#1-Understanding-Pytorch-Model)
 * [2. Classifier-Free Guidance Mechanics](#2-classifier-free-guidance-mechanics)
 * [3. Visualizing Network Architecture](#3-visualizing-network-architecture)
 * [4. Key Takeaways](#4-key-takeaways)
@@ -22,8 +22,20 @@ Welcome to the central repository for advanced generative modeling concepts. I w
 
 Link: https://colab.research.google.com/drive/1iWtifdm-9QSWJ3vtOHdnJJrp7My7tamV#scrollTo=0UxwsoidKA0e
 
-When preparing data for deep learning models, reshaping tensors correctly is critical. For instance, flattening feature maps before passing them into linear layers is a routine step.
+  - Encoder has 28 x 28 = 784 pixels images from MINST dataset as input
+  - only one hidden layer has 400 hidden dimensions.
+  - Output layer has 20 dimensions. Below is how model looks like. we will have vector of length 20 for $\mu$ and $\sigma$, i.e., variance in log scale. it will give you
+    $q(z|x) = N(\mu, diag(\sigma^2))$
 
+```python
+VAE(
+  (fc1): Linear(in_features=784, out_features=400, bias=True)
+  (fc_mu): Linear(in_features=400, out_features=20, bias=True)
+  (fc_logvar): Linear(in_features=400, out_features=20, bias=True)
+  (fc2): Linear(in_features=20, out_features=400, bias=True)
+  (fc3): Linear(in_features=400, out_features=784, bias=True)
+)
+```
 ### PyTorch Flattening Example
 The following code snippet demonstrates how to flatten all dimensions of a tensor except for the batch size:
 
