@@ -38,6 +38,12 @@ VAE(
   (fc2): Linear(in_features=20, out_features=400, bias=True)
   (fc3): Linear(in_features=400, out_features=784, bias=True)
 )
+#And the forward function is 
+  h = F.relu(self.fc1(x))
+  mu = self.fc_mu(h)
+  logvar = self.fc_logvar(h)
+  return mu, logvar
+
 ```
 ### PyTorch Flattening Example
 The following code snippet demonstrates how to flatten all dimensions of a tensor except for the batch size:
