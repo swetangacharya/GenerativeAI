@@ -11,7 +11,7 @@ Welcome to the central repository for advanced generative modeling concepts. I w
 ---
 
 ## 📑 Table of Contents
-* [1. Understanding Pytorch Model](#1-Understanding-Pytorch-Model)
+* [1. Understanding Pytorch Model](#1-understanding-pytorch-model)
 * [2. Classifier-Free Guidance Mechanics](#2-classifier-free-guidance-mechanics)
 * [3. Visualizing Network Architecture](#3-visualizing-network-architecture)
 * [4. Key Takeaways](#4-key-takeaways)
@@ -26,6 +26,7 @@ Link: https://colab.research.google.com/drive/1iWtifdm-9QSWJ3vtOHdnJJrp7My7tamV#
   - only one hidden layer has 400 hidden dimensions.
   - Output layer has 20 dimensions. Below is how model looks like. we will have vector of length 20 for $\mu$ and $\sigma$, i.e., variance in log scale. it will give you
     $q(z|x) = N(\mu, diag(\sigma^2))$
+  - two variables $\mu$ and $\sigma^2$ will be combined using reparameterization trick.  $z= \mu + \sigma^2 \circledcirc \epsilon$, where $\epsilon$ is the noise sampled separately from $N(0,I)$ 
 
 ```python
 VAE(
