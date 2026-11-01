@@ -27,7 +27,9 @@ Link: https://colab.research.google.com/drive/1iWtifdm-9QSWJ3vtOHdnJJrp7My7tamV#
   - Output layer has 20 dimensions. Below is how model looks like. we will have vector of length 20 for $\mu$ and $\sigma$, i.e., variance in log scale. it will give you
     $q(z|x) = N(\mu, diag(\sigma^2))$
   - two variables $\mu$ and $\sigma^2$ will be combined using reparameterization trick.  $z= \mu + \sigma^2 \circledcirc \epsilon$, where $\epsilon$ is the noise sampled separately from $N(0,I)$ 
-
+  -  **h = F.relu(self.fc1(x))**: Computes the hidden layer representations. It passes the input tensor x (784 features) through the first linear layer to get 400 features, then applies a Rectified Linear Unit (ReLU) activation function. This introduces non-linearity, allowing the model to learn complex patterns instead of just simple linear combinations.
+  -  **mu = self.fc_mu(h)**: Calculates the latent mean. It projects the 400-dimensional hidden features h into a 20-dimensional mean vector (mu). This vector represents the center point of the cluster in the latent space where the input image belongs.
+  - **logvar = self.fc_logvar(h)**: Calculates the latent log-variance. Running in parallel to the mean layer, it projects the same 400-dimensional features h into a separate 20-dimensional log-variance vector (logvar). This vector represents the spread, uncertainty, or noise level for each latent dimension.
 ```python
 VAE(
   (fc1): Linear(in_features=784, out_features=400, bias=True)
