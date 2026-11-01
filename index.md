@@ -11,14 +11,16 @@ Welcome to the central repository for advanced generative modeling concepts. I w
 ---
 
 ## 📑 Table of Contents
-* [1. Understanding model in Pytorch](#1-https://colab.research.google.com/drive/1iWtifdm-9QSWJ3vtOHdnJJrp7My7tamV#scrollTo=0UxwsoidKA0e)
+* [1. Understanding model in Pytorch](#1-Understanding Pytorch Model)
 * [2. Classifier-Free Guidance Mechanics](#2-classifier-free-guidance-mechanics)
 * [3. Visualizing Network Architecture](#3-visualizing-network-architecture)
 * [4. Key Takeaways](#4-key-takeaways)
 
 ---
 
-## 1. Core Tensor Operations
+## 1. Understanding Pytorch Model   
+
+Link: https://colab.research.google.com/drive/1iWtifdm-9QSWJ3vtOHdnJJrp7My7tamV#scrollTo=0UxwsoidKA0e
 
 When preparing data for deep learning models, reshaping tensors correctly is critical. For instance, flattening feature maps before passing them into linear layers is a routine step.
 
