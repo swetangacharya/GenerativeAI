@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Deep Learning & Generative AI Hub"
-description: "A comprehensive guide to neural network architectures, flow matching, and diffusion models."
+description: "A comprehensive guide to Pytorch neural network architectures, VAE, flow matching, and diffusion models."
 ---
 
 # A Generative AI.
@@ -67,21 +67,53 @@ VAE(
 - we can also use binary_cross_entropy_with_logits(input,target):
 F.binary_cross_entropy_with_logits(input, target): Combines a Sigmoid layer and BCE loss into a single function for better numerical stability. It takes raw model logits rather than probabilities.
 
-### PyTorch Flattening Example
-The following code snippet demonstrates how to flatten all dimensions of a tensor except for the batch size:
+### Pytorch VAE Model Example
+Think of your model as a production line. The layers you define in __init__ are the machines, and forward() is the conveyor belt that moves the data through those machines in a specific order.  
 
 ```python
-import torch
+class VAE(nn.Module):
+    def __init__(self, input_dim=784, hidden_dim=400, latent_dim=20):
+        super().__init__()
+        ### Encoder part
+        self.fc1 = nn.Linear(input_dim, hidden_dim)
+        self.fc_mu = nn.Linear(hidden_dim, latent_dim)
+        self.fc_logvar = nn.Linear(hidden_dim, latent_dim)
+        ### Decoder part
+        self.fc2 = nn.Linear(latent_dim, hidden_dim)
+        self.fc3 = nn.Linear(hidden_dim, input_dim)
+    
+    def encode(self, x):
+        """
+        Encoder network. Given x, produce: mu, logvar = log(sigma^2)
+        These define: q(z|x) = N(mu, diag(sigma^2))
+        """
+        h = F.relu(self.fc1(x))
+        mu = self.fc_mu(h)
+        logvar = self.fc_logvar(h)
+        return mu, logvar
 
-# Representing a batch of 32 images (3 channels, 64x64 pixels)
-x = torch.randn(32, 3, 64, 64)
+    def reparameterize(self, mu, logvar):
+        std = torch.exp(0.5 * logvar)
+        eps = torch.randn_like(std)
+        # Reparameterized sample
+        z = mu + std * eps
+        return z
+    def decode(self, z):
+        h = F.relu(self.fc2(z))
+        x_recon = torch.sigmoid(self.fc3(h))
+        return x_recon
 
-# Flatten everything except the batch dimension
-# Input shape: [32, 3, 64, 64] -> Output shape: [32, 12288]
-flattened_x = x.view(x.size(0), -1)
+    def forward(self, x):
+        x= torch.flatten(x, start_dim=1)
+        # Encoder
+        mu, logvar = self.encode(x)
+        # Sample z
+        z = self.reparameterize(mu, logvar)
+        # Decoder
+        x_recon = self.decode(z)
+        return x_recon, mu, logvar
 
-print(f"Original shape: {x.shape}")
-print(f"Flattened shape: {flattened_x.shape}")
+
 ```
 
 ---
