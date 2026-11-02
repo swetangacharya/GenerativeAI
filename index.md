@@ -53,7 +53,19 @@ VAE(
 
 
   - The mathematical derivation of the VAE optimization objective naturally dictates that both losses should be computed as a total sum over the dimensions. If you were to     use reduction="mean", the reconstruction loss would get divided by the number of pixels (784) and the batch size, making it artificially tiny compared to the KL       divergence loss. This imbalance would cause the model to ignore image quality entirely.
+  - F.binary_cross_entropy(input, target): Measures the difference between target binary labels ($y \in {0,1}$)  and predicted probabilities ($p \in [0,1]$)
+    
+   $\color{blue}l(x,y)= -[y \cdot logx + (1-y) \cdot log(1-x)]$   
+  -
+  - Here, y is ground truth and x is predict input, now if we have ground truth=1 and predicted truth is 0 then   
+    $loss(0,1)= -[1 \cdot log(0)+ 0 \cdot log(1-0)]= \infty$ , because $log(0)=\infty$, model punish heavily for predicting completely wrong.   
 
+  - Now if we have x=0.2 and y=0
+    $loss(0.2,0)= -[0 \cdot log(0.2)+ 1 \cdot log(1-0.2)]= 0.223$ , model won't punish heavily for predicting slightly wrong.
+
+
+- we can also use binary_cross_entropy_with_logits(input,target):
+F.binary_cross_entropy_with_logits(input, target): Combines a Sigmoid layer and BCE loss into a single function for better numerical stability. It takes raw model logits rather than probabilities.
 
 ### PyTorch Flattening Example
 The following code snippet demonstrates how to flatten all dimensions of a tensor except for the batch size:
