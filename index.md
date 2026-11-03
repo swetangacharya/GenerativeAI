@@ -124,9 +124,15 @@ so, our ELBO is $\ell (\theta,\phi;x)=E_{z \sim q_{\phi(\cdot|x)}}[log p_{\theta
 $D_{KL}(q_{\phi}(z|x)||p(z)) = - \frac{1}{2} \sum_{i=1}^d(1+log(\sigma_i^2)-\mu_i^2- \sigma_i^2)$
 
 **Breaking down each term:**   
-$\mu^2$  
+$\mu^2$ **(Mean Penalty)**
 	- Encourages the mean μ of the latent distribution to stay close to 0.
-        - If the encoder pushes the mean far away from zero (e.g., $\mu= 5$), this term grows large, penalizing the network.
+    - If the encoder pushes the mean far away from zero (e.g., $\mu= 5$), this term grows large, penalizing the network.
+
+$\sigma^2$ **(Variance Penalty)**   
+- Encourages the variance $\sigma^2$ to be close to 1.If $\sigma^2$ gets very large, this linear term grows large and penalizes the network.
+  
+$- log(\sigma^2)$ **(entropy/information term)**
+- Prevents the variance from collapsing to zero ($\sigma^2 \to 0$, which would make the encoder deterministic like a standard autoencoder
 
 ## 2. Classifier-Free Guidance Mechanics
 
