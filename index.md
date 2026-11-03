@@ -180,7 +180,24 @@ train_loss, train_recon, train_kl = train_one_epoch(
         device
     )
 ```
-## now for every epoch we make a forward pass the images, get the VAE loss , evaluate and calculate the average loss
+[1] define VAE model and instantiate.  
+[2] define VAE loss with input (pred_image,true_image, mean,logvariance) , KL+re_construction loss.  
+[3] define training function:
+	- take image from dataloader, pass image to model (forward function) and receive reconstructed_image, mean,variance  
+	- calculate vae loss by calling VAE loss function, loss.backward(), optimizer.step(), divide each 		total_loss,reconstrunction_loss, KL loss ) by batch size N.  
+[4] define evaluate function: (model.eval())  
+	freeze gradients (torch.no_grad())  
+	pass images to model and get reconstructed_image,mean,logvar in return  
+	calculate VAE loss by calling VAE loss function  
+	calculate and return avg loss of (total_loss,reconstrunction_loss, KL loss ) by training images  N=60000  
+[5] Train the VAE ( it calls all above functions)  
+		for each epoch in range(1...20)  
+			call train function (model,train_loader,optimizer) get (train_loss,train_reconstruction_loss,train_KL_loss)
+	 		call evaluate function (model, test_loader=10000 images) get (test_loss,test_reconstruction_loss,test_KL_loss)  
+			
+	 	
+
+
 ## 2. Classifier-Free Guidance Mechanics
 
 In generative networks, **Classifier-Free Guidance (CFG)** balances sample quality and diversity without relying on a separate classifier network. 
