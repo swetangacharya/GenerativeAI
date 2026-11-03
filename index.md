@@ -117,6 +117,16 @@ class VAE(nn.Module):
 ```
 
 ---
+reconstruction loss: BCE(x_pred,x_true), it will ask encoder to brigde this gap.
+so total loss is push-pull kind of scenario. where reconstruction loss force encoder to do better and bring image as close as real. while KL loss saves it from overfitting.
+
+so, our ELBO is $\ell (\theta,\phi;x)=E_{z \sim q_{\phi(\cdot|x)}}[log p_{\theta}(x|z)] - D_{KL}(q_{\phi}(z|x)||p(z))$
+$D_{KL}(q_{\phi}(z|x)||p(z)) = - \frac{1}{2} \sum_{i=1}^d(1+log(\sigma_i^2)-\mu_i^2- \sigma_i^2)$
+
+**Breaking down each term:**   
+$\mu^2$  
+	- Encourages the mean μ of the latent distribution to stay close to 0.
+        - If the encoder pushes the mean far away from zero (e.g., $\mu= 5$), this term grows large, penalizing the network.
 
 ## 2. Classifier-Free Guidance Mechanics
 
