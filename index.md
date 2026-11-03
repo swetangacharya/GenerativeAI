@@ -182,8 +182,8 @@ train_loss, train_recon, train_kl = train_one_epoch(
 ```
 [1] define VAE model and instantiate.  
 [2] define VAE loss with input (pred_image,true_image, mean,logvariance) , KL+re_construction loss.  
-[3] define training function:
-	- take image from dataloader, pass image to model (forward function) and receive reconstructed_image, mean,variance  
+[3] define training function:  
+	- take image from dataloader, pass image to model (forward function) and receive reconstructed_image, mean,variance.  
 	- calculate vae loss by calling VAE loss function, loss.backward(), optimizer.step(), divide each 		total_loss,reconstrunction_loss, KL loss ) by batch size N.  
 [4] define evaluate function: (model.eval())  
 	freeze gradients (torch.no_grad())  
