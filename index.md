@@ -134,6 +134,53 @@ $\sigma^2$ **(Variance Penalty)**
 $- log(\sigma^2)$ **(entropy/information term)**
 - Prevents the variance from collapsing to zero ($\sigma^2 \to 0$, which would make the encoder deterministic like a standard autoencoder
 
+```python
+def vae_loss(recon_x, x, mu, logvar):
+    # Flatten original x to match recon_x.
+    x = x.view(x.size(0), -1)
+    reconstruction_loss = F.binary_cross_entropy(recon_x,x,reduction="sum")
+    kl_loss = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
+    # Total negative ELBO
+    total_loss = reconstruction_loss + kl_loss
+    return total_loss, reconstruction_loss, kl_loss
+def evaluate(model, loader, device):
+    model.eval()
+    total_loss = 0
+    total_recon = 0
+    total_kl = 0
+    # No gradients are required during evaluation.
+    with torch.no_grad():
+
+        for images, _ in loader:
+            images = images.to(device)
+            recon_images, mu, logvar = model(images)
+            loss,recon_loss, kl_loss = vae_loss(recon_images,images,mu,logvar)
+            
+            total_loss += loss.item()
+            total_recon += recon_loss.item()
+            total_kl += kl_loss.item()
+
+    N = len(loader.dataset)
+    return (total_loss / N,total_recon / N,total_kl / N)
+
+
+```
+
+```python
+train_loss, train_recon, train_kl = train_one_epoch(
+        model,
+        train_loader,
+        optimizer,
+        device
+    )
+
+    test_loss, test_recon, test_kl = evaluate(
+        model,
+        test_loader,
+        device
+    )
+```
+## now for every epoch we make a forward pass the images, get the VAE loss , evaluate and calculate the average loss
 ## 2. Classifier-Free Guidance Mechanics
 
 In generative networks, **Classifier-Free Guidance (CFG)** balances sample quality and diversity without relying on a separate classifier network. 
