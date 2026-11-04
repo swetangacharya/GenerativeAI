@@ -117,7 +117,7 @@ class VAE(nn.Module):
 ```
 
 ---
-reconstruction loss: BCE(x_pred,x_true), it will ask encoder to brigde this gap.
+**reconstruction loss:** BCE(x_pred,x_true), it will ask encoder to brigde this gap.
 so total loss is push-pull kind of scenario. where reconstruction loss force encoder to do better and bring image as close as real. while KL loss saves it from overfitting.
 
 so, our ELBO is $\ell (\theta,\phi;x)=E_{z \sim q_{\phi(\cdot|x)}}[log p_{\theta}(x|z)] - D_{KL}(q_{\phi}(z|x)||p(z))$
@@ -195,7 +195,19 @@ train_loss, train_recon, train_kl = train_one_epoch(
 			call train function (model,train_loader,optimizer) get (train_loss,train_reconstruction_loss,train_KL_loss)
 	 		call evaluate function (model, test_loader=10000 images) get (test_loss,test_reconstruction_loss,test_KL_loss)  
 			
-	 	
+**How to reconstruct new image? (directly from $z \sim N(0,I)$ )**
+	- put model on evaluation (model.eval())
+	- generate random samples each with same latent_variable dimension (torch.randn(num_samples,latent_dim))
+	- pass it directly to decoder with no gradient update. (with torch.no_grad() , generated= model.decoder(z))
+	- convert vector to 28x28 or image size. generated.view(-1, 1, 28, 28) (batch size,channel,height,width)
+	- plot the image with pyplot
+
+**why decoder generates image instead of Gaussian Noise?**
+When you feed a sample $z \sim N(0,I)$ into the decoder, you are giving it a coordinate from a geometric space it understands completely. Here is a breakdown of the mechanics behind why this happens:  
+	- The KL Divergence Forced the Latent Space to Match the Prior. During training, the VAE optimization objective includes the KL Divergence loss. This specific term penalizes the encoder if it organizes the latent codes into a distribution that looks different from a standard Gaussian $N(0, I)$.
+	- The encoder is forced to pack all training images neatly inside the central region of the Gaussian distribution.  
+	- Crucially, there are no "empty pockets" or holes near the origin. The space is smooth and continuous.  
+	- Therefore, when you randomly sample a vector from $N(0,I)$ after training, you are guaranteed to land on a coordinate that the decoder recognizes as valid, realistic data.
 
 
 ## 2. Classifier-Free Guidance Mechanics
